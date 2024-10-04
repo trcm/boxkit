@@ -11,13 +11,13 @@ COPY ./packages.ubuntu /toolbox-packages
 
 RUN rm /etc/apt/apt.conf.d/docker-gzip-indexes /etc/apt/apt.conf.d/docker-no-languages && \
     sed -Ei 's/^(hosts:.*)(\<files\>)\s*(.*)/\1\2 myhostname \3/' /etc/nsswitch.conf  && \
-    sed -Ei '/apt-get (update|upgrade)/s/^/#/' /usr/local/sbin/unminimize && \
+#    sed -Ei '/apt-get (update|upgrade)/s/^/#/' && \
     apt-get update && \
-    yes | /usr/local/sbin/unminimize && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
     ubuntu-minimal ubuntu-standard \
     libnss-myhostname \
     flatpak-xdg-utils \
+    curl \
     $(cat toolbox-packages | xargs) && \
     rm -rd /var/lib/apt/lists/* && \
     rm /toolbox-packages && \
@@ -31,5 +31,6 @@ RUN rm /etc/apt/apt.conf.d/docker-gzip-indexes /etc/apt/apt.conf.d/docker-no-lan
     ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
     ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
     ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
+curl -sS https://starship.rs/install.sh | sh -s -- --yes && \
     echo "ALL ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers 
 

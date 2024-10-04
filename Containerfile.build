@@ -1,0 +1,16 @@
+FROM docker.io/library/ubuntu:24.04
+
+FROM scratch
+# FROM https://hub.docker.com/_/ubuntu
+
+LABEL com.github.containers.toolbox="true" \
+    name="ubuntu-toolbox" \
+    usage="This image is meant to be used with the toolbox or distrobox command" \
+    summary="A cloud-native terminal experience powered by Ubuntu" \
+    maintainer="midson.trc@gmail.com"
+
+COPY ./packages.ubuntu /toolbox-packages
+
+RUN rm /etc/apt/apt.conf.d/docker-gzip-indexes /etc/apt/apt.conf.d/docker-no-languages && apt-get update &&\
+    DEBIAN_FRONTEND=noninteractive apt-get -y install ubuntu-standard curl #&& \
+#    curl -sS https://starship.rs/install.sh | sh
